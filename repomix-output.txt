@@ -1,0 +1,190 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+================================================================
+File Summary
+================================================================
+
+Purpose:
+--------
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+
+File Format:
+------------
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Multiple file entries, each consisting of:
+  a. A separator line (================)
+  b. The file path (File: path/to/file)
+  c. Another separator line
+  d. The full contents of the file
+  e. A blank line
+
+Usage Guidelines:
+-----------------
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+
+Notes:
+------
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+
+Additional Info:
+----------------
+
+================================================================
+Directory Structure
+================================================================
+src/
+  postgres_model_context.rs
+.gitignore
+Cargo.toml
+extension.toml
+README.md
+
+================================================================
+Files
+================================================================
+
+================
+File: src/postgres_model_context.rs
+================
+use serde::Deserialize;
+use std::env;
+use zed::settings::ContextServerSettings;
+use zed_extension_api::{self as zed, serde_json, Command, ContextServerId, Project, Result};
+
+const PACKAGE_NAME: &str = "@zeddotdev/postgres-context-server";
+const PACKAGE_VERSION: &str = "0.1.2";
+const SERVER_PATH: &str = "node_modules/@zeddotdev/postgres-context-server/index.mjs";
+
+struct PostgresModelContextExtension;
+
+#[derive(Debug, Deserialize)]
+struct PostgresContextServerSettings {
+    database_url: String,
+}
+
+impl zed::Extension for PostgresModelContextExtension {
+    fn new() -> Self {
+        Self
+    }
+
+    fn context_server_command(
+        &mut self,
+        _context_server_id: &ContextServerId,
+        project: &Project,
+    ) -> Result<Command> {
+        let version = zed::npm_package_installed_version(PACKAGE_NAME)?;
+        if version.as_deref() != Some(PACKAGE_VERSION) {
+            zed::npm_install_package(PACKAGE_NAME, PACKAGE_VERSION)?;
+        }
+
+        let settings = ContextServerSettings::for_project("postgres-context-server", project)?;
+        let Some(settings) = settings.settings else {
+            return Err("missing `database_url` setting".into());
+        };
+        let settings: PostgresContextServerSettings =
+            serde_json::from_value(settings).map_err(|e| e.to_string())?;
+
+        Ok(Command {
+            command: "node".to_string(),
+            args: vec![
+                env::current_dir()
+                    .unwrap()
+                    .join(SERVER_PATH)
+                    .to_string_lossy()
+                    .to_string(),
+            ],
+            env: vec![
+                ("DATABASE_URL".into(), settings.database_url)
+            ],
+        })
+    }
+}
+
+zed::register_extension!(PostgresModelContextExtension);
+
+================
+File: .gitignore
+================
+target
+*.wasm
+
+================
+File: Cargo.toml
+================
+[package]
+name = "zed_postgres_model_context"
+version = "0.0.1"
+edition = "2021"
+publish = false
+license = "Apache-2.0"
+
+[lib]
+path = "src/postgres_model_context.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+serde = "1.0"
+zed_extension_api = "0.2.0"
+
+================
+File: extension.toml
+================
+id = "postgres-context-server"
+name = "Postgres Context Server"
+description = "Model Context Server for PostgreSQL"
+version = "0.0.1"
+schema_version = 1
+authors = ["Max Brunsfeld <max@zed.dev>"]
+repository = "https://github.com/zed-extensions/postgres-context-server"
+
+[context_servers.postgres-context-server]
+name = "Postgres Context Server"
+
+================
+File: README.md
+================
+# Zed Postgres Context Server
+
+This extension provides a Model Context Server for Postgres, for use with the Zed AI assistant.
+
+It adds a `/pg-schema` slash command to the Assistant Panel.
+
+## Configuration
+
+To use the extension, you will need to point the context server at a Postgres database by setting the `database_url` in your Zed `settings.json`:
+
+```json
+{
+  "context_servers": {
+    "postgres-context-server": {
+      "settings": {
+        "database_url": "postgresql://myuser:mypassword@localhost:5432/mydatabase"
+      }
+    }
+  }
+}
+```
+
+## Usage
+
+- `/pg-schema <table-name>`: Retrieve the schema for the table with the given name.
+- `/pg-schema all-tables`: Retrieve the schemas for all tables in the database.
+
+
+
+================================================================
+End of Codebase
+================================================================

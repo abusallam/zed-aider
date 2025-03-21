@@ -1,10 +1,30 @@
 id = "postgres-context-server"
-name = "Postgres Context Server"
-description = "Model Context Server for PostgreSQL"
-version = "0.0.1"
+name = "Coolify"
+description = "Coolify integration for Zed"
+version = "0.1.0"
 schema_version = 1
 authors = ["Max Brunsfeld <max@zed.dev>"]
-repository = "https://github.com/zed-extensions/postgres-context-server"
+repository = "https://github.com/asimmughal/zed-coolify"
 
 [context_servers.postgres-context-server]
 name = "Postgres Context Server"
+
+[capabilities]
+commands = true
+language_features = true
+
+[[commands]]
+name = "coolify.listServers"
+title = "List Coolify Servers"
+
+[[commands]]
+name = "coolify.listApplications"
+title = "List Coolify Applications"
+
+[[commands]]
+name = "coolify.deployApplication"
+title = "Deploy Coolify Application"
+
+[[commands]]
+name = "coolify.getApplicationLogs"
+title = "Get Application Logs"
