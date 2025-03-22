@@ -2,7 +2,7 @@
 name = "zed-coolify"
 version = "0.2.0"
 edition = "2021"
-description = "A Zed extension for Coolify integration"
+description = "A Zed extension for Aider integration"
 authors = ["Asim Mughal <asimzm@outlook.com>"]
 license = "MIT"
 

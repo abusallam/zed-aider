@@ -1,34 +1,28 @@
 use anyhow::Result;
-use crate::api::CoolifyClient;
 
-pub struct CoolifyExtension {
-    pub client: Option<CoolifyClient>
+pub struct AiderExtension {
 }
 
 #[async_trait::async_trait]
-impl zed::Extension for CoolifyExtension {
+impl zed::Extension for AiderExtension {
     async fn activate(&mut self, cx: &mut zed::ExtensionContext) -> Result<()> {
-        let config = cx.config_value("coolify.url").unwrap().to_string();
-        self.client = Some(CoolifyClient::new(&config));
+        let config = cx.config_value("aider.url").unwrap_or_default().to_string();
 
-        cx.add_command("coolify.list_servers", crate::commands::list_servers)?;
-        cx.add_command("coolify.list_applications", crate::commands::list_applications)?;
-        cx.add_command("coolify.deploy_application", crate::commands::deploy_application)?;
-        cx.add_command("coolify.get_application_logs", crate::commands::get_application_logs)?;
+        cx.add_command("aider.listFiles", crate::commands::files::list_files)?;
+        cx.add_command("aider.askAider", crate::commands::files::ask_aider)?;
         
         Ok(())
     }
 }
 
-impl Default for CoolifyExtension {
+impl Default for AiderExtension {
     fn default() -> Self {
         Self {
-            client: None
         }
     }
 }
 
 #[no_mangle]
 pub fn init() -> Box<dyn zed::Extension> {
-    Box::new(CoolifyExtension::default())
+    Box::new(AiderExtension::default())
 }

@@ -1,13 +1,11 @@
-# Zed Coolify Extension
+# Zed Aider Extension
 
-A Zed extension for integrating with Coolify deployment platform.
+A Zed extension for integrating with Aider deployment platform.
 
 ## Features
 
-- List Coolify servers
-- List applications
-- Deploy applications
-- View application logs
+- List files in the project
+- Ask Aider for code changes
 
 ## Building
 

@@ -1,6 +1,5 @@
-pub mod api;
 pub mod models;
-pub mod commands;
 pub mod extension;
+pub mod files;
 
-pub use extension::CoolifyExtension;
+pub use extension::AiderExtension;
