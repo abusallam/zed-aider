@@ -7186,7 +7186,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "zed-coolify"
+name = "zed-aider"
 version = "0.2.0"
 dependencies = [
  "anyhow",

@@ -1,9 +1,9 @@
 id = "aider"
 name = "Aider"
 description = "Aider integration for Zed"
-version = "0.1.0"
+version = "0.2.0"
 schema_version = 1
-authors = ["Asim abusallam <asim.abusallam@gmail.com>"]
+authors = ["Asim Mughal <asimzm@outlook.com>"]
 
 [capabilities]
 commands = true
@@ -15,6 +15,17 @@ list_files = {
 }
 ask_aider = {
     title = "Ask Aider",
-    command = "aider.askAider"
+    command = "aider.askAider",
+    inputSchema = {
+        type = "object",
+        properties = {
+            prompt: {
+                type = "string",
+                title = "Prompt",
+                description = "Enter your prompt for Aider"
+            }
+        },
+        required = ["prompt"]
+    }
 }
 }

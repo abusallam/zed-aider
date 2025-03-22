@@ -17,20 +17,20 @@ cargo build --release
 2. Package the extension:
 ```bash
 # Create extension directory
-mkdir -p ~/.config/zed/extensions/dev/coolify
+mkdir -p ~/.config/zed/extensions/dev/aider
 
 # Copy extension files
-cp target/release/libzed_coolify.so ~/.config/zed/extensions/dev/coolify/
-cp extension.toml ~/.config/zed/extensions/dev/coolify/
+cp target/release/libzed_aider.so ~/.config/zed/extensions/dev/aider/
+cp extension.toml ~/.config/zed/extensions/dev/aider/
 
 # Create extension package
 cd ~/.config/zed/extensions/dev
-tar -czf coolify.vsix coolify/
+tar -czf aider.vsix aider/
 ```
 
 3. Install the packaged extension:
 ```bash
-cp ~/.config/zed/extensions/dev/coolify.vsix ~/.config/zed/extensions/
+cp ~/.config/zed/extensions/dev/aider.vsix ~/.config/zed/extensions/
 ```
 
 ## Development
@@ -39,9 +39,9 @@ For local development:
 
 1. Create symbolic links:
 ```bash
-mkdir -p ~/.config/zed/extensions/dev/coolify
-ln -s "$(pwd)/target/release/libzed_coolify.so" ~/.config/zed/extensions/dev/coolify/
-ln -s "$(pwd)/extension.toml" ~/.config/zed/extensions/dev/coolify/
+mkdir -p ~/.config/zed/extensions/dev/aider
+ln -s "$(pwd)/target/release/libzed_aider.so" ~/.config/zed/extensions/dev/aider/
+ln -s "$(pwd)/extension.toml" ~/.config/zed/extensions/dev/aider/
 ```
 
 2. Restart Zed to load the extension
@@ -51,8 +51,8 @@ ln -s "$(pwd)/extension.toml" ~/.config/zed/extensions/dev/coolify/
 Add to your Zed settings.json:
 ```json
 {
-  "coolify": {
-    "api_url": "https://your-coolify-instance.com",
+  "aider": {
+    "api_url": "https://your-aider-instance.com",
     "api_key": "your-api-key"
   }
 }
@@ -60,8 +60,8 @@ Add to your Zed settings.json:
 
 ## Usage
 
-- `/pg-schema <table-name>`: Retrieve the schema for the table with the given name.
-- `/pg-schema all-tables`: Retrieve the schemas for all tables in the database.
+- `aider.listFiles`: List files in the current workspace. Run this command from the Zed command palette.
+- `aider.askAider`: Ask Aider for code changes. Run this command from the Zed command palette and provide a prompt for Aider.
 
 ## Releases
 
